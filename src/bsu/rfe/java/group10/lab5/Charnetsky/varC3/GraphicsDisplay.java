@@ -518,6 +518,8 @@ public class GraphicsDisplay extends JPanel {
 
     public void reset() {
         this.showGraphics(this.originalData);
+        this.setShowMarkers(true);
+        this.setShowAxis(true);
     }
 
     public void setShowAxis(boolean showAxis) {
