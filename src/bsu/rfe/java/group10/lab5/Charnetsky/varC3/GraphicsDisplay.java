@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -40,6 +41,7 @@ public class GraphicsDisplay extends JPanel {
     // Флаговые переменные, задающие правила отображения графика
     private boolean showAxis = true;
     private boolean showMarkers = true;
+    private boolean showRotate = false;
 
     private BasicStroke axisStroke;
     private BasicStroke graphicsStroke;
@@ -181,6 +183,13 @@ public class GraphicsDisplay extends JPanel {
         if (this.graphicsData != null && this.graphicsData.size() != 0) {
             Graphics2D canvas = (Graphics2D)g;
             //this.paintGrid(canvas);
+            if(showRotate) {
+                //поворот на 90 градусов работает
+                AffineTransform rat = new AffineTransform();
+                rat.setToTranslation(200, 1150);//нужно подобрать норм координаты
+                rat.rotate(-Math.PI / 2);
+                canvas.transform(rat);
+            }
             if (showAxis) paintAxis(canvas);
             this.paintGraphics(canvas);
             if (showMarkers) paintMarkers(canvas);
@@ -528,6 +537,11 @@ public class GraphicsDisplay extends JPanel {
 
     public void setShowMarkers(boolean showMarkers) {
         this.showMarkers = showMarkers;
+    }
+
+    public void setShowRotate(boolean antiClockRotate) {
+        this.showRotate = antiClockRotate;
+        repaint();
     }
 
     public class MouseHandler extends MouseAdapter {

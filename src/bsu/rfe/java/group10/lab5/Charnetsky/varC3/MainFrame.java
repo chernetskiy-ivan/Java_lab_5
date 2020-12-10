@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
 
     private JCheckBoxMenuItem showMarkersMenuItem;
     private JCheckBoxMenuItem showAxisMenuItem;
+    private JCheckBoxMenuItem showRotateMenuItem;
     private JMenuItem addGraphicsMenuItem;
     //private JCheckBoxMenuItem rotateMenuItem;
 
@@ -130,6 +131,16 @@ public class MainFrame extends JFrame {
         showMarkersMenuItem.setSelected(true);
         // Зарегистрировать обработчик событий, связанных с меню "График"
         graphicsMenu.addMenuListener(new GraphicsMenuListener());
+
+        Action showRotateAction = new AbstractAction("Перевернуть график на 90 градусов") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                display.setShowRotate(showRotateMenuItem.isSelected());
+            }
+        };
+        showRotateMenuItem = new JCheckBoxMenuItem(showRotateAction);
+        graphicsMenu.add(showRotateMenuItem);
+        showRotateMenuItem.setSelected(false);
 
         Action addGraphicsAction = new AbstractAction("Добавить функцию") {
             @Override
