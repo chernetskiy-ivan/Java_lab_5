@@ -512,6 +512,10 @@ public class GraphicsDisplay extends JPanel {
         }
     }
 
+    public ArrayList<Double[]> getGraphicsData() {
+        return graphicsData;
+    }
+
     public void reset() {
         this.showGraphics(this.originalData);
     }

@@ -2,12 +2,10 @@ package bsu.rfe.java.group10.lab5.Charnetsky.varC3;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -17,9 +15,11 @@ public class MainFrame extends JFrame {
     private static final int HEIGHT = 500;
     private JFileChooser fileChooser = null;
     private JMenuItem resetGraphicsMenuItem;
+    private DecimalFormat formatter = new DecimalFormat("###.#####");
     private GraphicsDisplay display = new GraphicsDisplay();
     private boolean fileLoaded = false;
     private int amountOfLoadedGraphics = 0;
+    private JMenuItem saveToTextMenuItem;
 
     private JCheckBoxMenuItem showMarkersMenuItem;
     private JCheckBoxMenuItem showAxisMenuItem;
@@ -68,9 +68,27 @@ public class MainFrame extends JFrame {
 
                 MainFrame.this.fileChooser.showOpenDialog(MainFrame.this);
                 MainFrame.this.openGraphics(MainFrame.this.fileChooser.getSelectedFile(), "СОЗДАНИЕ ГРАФИКА");
+                saveToTextMenuItem.setEnabled(true);
             }
         };
         fileMenu.add(openGraphicsAction);
+
+        Action saveToTextAction = new AbstractAction("Сохранить в текстовый файл") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(fileChooser == null){
+                    fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if (fileChooser.showSaveDialog(MainFrame.this) ==
+                        JFileChooser.APPROVE_OPTION){
+                    saveToTextFile(fileChooser.getSelectedFile());
+                }
+                saveToTextMenuItem.setEnabled(false);
+            }
+        };
+        saveToTextMenuItem = fileMenu.add(saveToTextAction);
+        saveToTextMenuItem.setEnabled(false);
 
         Action resetGraphicsAction = new AbstractAction("Отменить все изменения") {
             public void actionPerformed(ActionEvent event) {
@@ -187,6 +205,29 @@ public class MainFrame extends JFrame {
                     "Ошибка чтения координат точек из файла",
                     "Ошибка загрузки данных", JOptionPane.WARNING_MESSAGE);
             return;
+        }
+    }
+
+    private void saveToTextFile(File selectedFile) {
+        try {
+            FileWriter writer = new FileWriter(selectedFile);
+            ArrayList<Double[]> originalData = display.getGraphicsData();
+            Iterator iter = originalData.iterator();
+
+            while(iter.hasNext()) {
+                Double[] point = (Double[])iter.next();
+                for(int i = 0; i < 2; i++){
+                    writer.write(String.valueOf(formatter.format(point[i])));
+                    int a = formatter.format(point[i]).toString().length();
+                    for (int l = 1; l < (30 - a); l++) {
+                        writer.write(" ");
+                    }
+                }
+                writer.write("\n");
+            }
+            writer.flush();
+        }catch (IOException e){
+            System.out.println("Файл не может быть создан");
         }
     }
 
