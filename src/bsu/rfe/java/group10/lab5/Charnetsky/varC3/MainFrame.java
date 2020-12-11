@@ -34,6 +34,7 @@ public class MainFrame extends JFrame {
             // Доступность или недоступность элементов меню "График" определяется загруженностью данных
             showAxisMenuItem.setEnabled(fileLoaded);
             showMarkersMenuItem.setEnabled(fileLoaded);
+            showRotateMenuItem.setEnabled(fileLoaded);
             //rotateMenuItem.setEnabled(fileLoaded);
             if(amountOfLoadedGraphics > 0 && amountOfLoadedGraphics < 2)
                 addGraphicsMenuItem.setEnabled(true);
@@ -93,6 +94,7 @@ public class MainFrame extends JFrame {
 
         Action resetGraphicsAction = new AbstractAction("Отменить все изменения") {
             public void actionPerformed(ActionEvent event) {
+                showRotateMenuItem.setSelected(false);
                 MainFrame.this.display.reset();
             }
         };
